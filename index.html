@@ -255,6 +255,9 @@ function moveNoButton() {
 
 yesBtn.addEventListener("click", () => {
 
+    //pink background
+    document.body.style.background = "linear-gradient(to bottom, #ffd6ec, #ff9ecf)";
+
     document.body.innerHTML = `
         <h1>ESOOOOOOO ❤️</h1>
         <h2>
@@ -268,6 +271,8 @@ yesBtn.addEventListener("click", () => {
         border-radius:20px;
         margin-top:20px;">
     `;
+
+    document.getElementById("amorEterno").play();
 
     createHearts();
 });
@@ -299,6 +304,10 @@ function createHearts() {
 }
 
 </script>
+
+<audio id="amorEterno" preload="auto">
+    <source src="amor-eterno.mp3" type="audio/mpeg">
+</audio>
 
 </body>
 </html>
