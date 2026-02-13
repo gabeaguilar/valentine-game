@@ -166,14 +166,18 @@ if (squirrel.x < 300) {
     ctx.fillText("sigue el camino", 450, 240);
 }
 
-// Draw squirrel
+// Draw squirrel facing right
+ctx.save(); // save state
+ctx.translate(squirrel.x - cameraX + squirrel.size / 2, squirrel.y + squirrel.size / 2);
+ctx.scale(-1, 1); // flip horizontally
 ctx.drawImage(
     squirrelImg,
-    squirrel.x - cameraX,
-    squirrel.y,
+    -squirrel.size / 2,
+    -squirrel.size / 2,
     squirrel.size,
     squirrel.size
 );
+ctx.restore(); // restore state
 
 // Draw chocofresa
 ctx.drawImage(
