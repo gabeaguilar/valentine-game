@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Para Marlene Victoria ❤️</title>
+
+<style>
+
+body {
+    margin: 0;
+    background: black;
+    color: white;
+    font-family: Arial;
+    text-align: center;
+    overflow: hidden;
+}
+
+/* Forest background */
+#gameCanvas {
+    background-image: url("forest.jpg");
+    background-size: cover;
+    background-position: center;
+    border: 3px solid white;
+    display: none;
+    margin-top: 20px;
+}
+
+button {
+    padding: 15px 25px;
+    font-size: 20px;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 12px;
+    border: none;
+}
+
+#yesBtn {
+    background: pink;
+}
+
+#noBtn {
+    background: gray;
+    position: absolute;
+}
+
+.heart {
+    position: absolute;
+    color: pink;
+    animation: floatUp 4s linear infinite;
+}
+
+@keyframes floatUp {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(-800px);
+        opacity: 0;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<h1 id="title">Hola Marlene Victoria 🐿️</h1>
+
+<p id="text">
+Un pequeño écureuil tiene una misión muy importante...<br><br>
+Ayúdalo a encontrar la chocofresa 🍓🍫
+</p>
+
+<button id="startBtn">Empezar</button>
+
+<canvas id="gameCanvas" width="700" height="400"></canvas>
+
+<div id="question" style="display:none;">
+    <p id="message">
+        Marlene Victoria,<br><br>
+        Will you be my Valentine? ❤️
+    </p>
+
+    <button id="yesBtn">YES ❤️</button>
+    <button id="noBtn">no</button>
+</div>
+
+<script>
+
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+const squirrelImg = new Image();
+squirrelImg.src = "https://emojiapi.dev/api/v1/1f43f/128.png";
+
+const chocoImg = new Image();
+chocoImg.src = "https://emojiapi.dev/api/v1/1f353/128.png";
+
+let squirrel = {
+    x: 50,
+    y: 200,
+    size: 60
+};
+
+let chocofresa = {
+    x: 1400,
+    y: 180,
+    size: 60
+};
+
+let gameRunning = false;
+let cameraX = 0;
+
+document.getElementById("startBtn").onclick = () => {
+
+    document.getElementById("startBtn").style.display = "none";
+    document.getElementById("text").style.display = "none";
+
+    canvas.style.display = "inline";
+
+    gameRunning = true;
+    gameLoop();
+};
+
+document.addEventListener("keydown", e => {
+
+    if (!gameRunning) return;
+
+    if (e.key === "ArrowUp") squirrel.y -= 15;
+    if (e.key === "ArrowDown") squirrel.y += 15;
+    if (e.key === "ArrowLeft") squirrel.x -= 15;
+    if (e.key === "ArrowRight") squirrel.x += 15;
+});
+
+function gameLoop() {
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+cameraX = squirrel.x - 150;
+
+// Draw cartoon trees layered in front of real mountain
+for (let i = 0; i < 2000; i += 350) {
+
+ctx.globalAlpha = 0.9;
+
+ctx.fillStyle = "#5b3a29";
+ctx.fillRect(i - cameraX + 10, 260, 20, 140);
+
+ctx.fillStyle = "#2e8b57";
+ctx.beginPath();
+ctx.arc(i - cameraX + 20, 240, 60, 0, Math.PI * 2);
+ctx.fill();
+
+ctx.globalAlpha = 1;
+}
+
+// Draw arrow at start
+if (squirrel.x < 300) {
+
+    ctx.fillStyle = "white";
+    ctx.font = "30px Arial";
+    ctx.fillText("→", 500, 200);
+
+    ctx.font = "20px Arial";
+    ctx.fillText("sigue el camino", 450, 240);
+}
+
+// Draw squirrel
+ctx.drawImage(
+    squirrelImg,
+    squirrel.x - cameraX,
+    squirrel.y,
+    squirrel.size,
+    squirrel.size
+);
+
+// Draw chocofresa
+ctx.drawImage(
+    chocoImg,
+    chocofresa.x - cameraX,
+    chocofresa.y,
+    chocofresa.size,
+    chocofresa.size
+);
+
+if (collision()) {
+    gameRunning = false;
+    showQuestion();
+}
+
+if (gameRunning)
+    requestAnimationFrame(gameLoop);
+}
+
+function collision() {
+
+return squirrel.x < chocofresa.x + chocofresa.size &&
+       squirrel.x + squirrel.size > chocofresa.x &&
+       squirrel.y < chocofresa.y + chocofresa.size &&
+       squirrel.y + squirrel.size > chocofresa.y;
+}
+
+function showQuestion() {
+
+    canvas.style.display = "none";
+
+    document.getElementById("title").innerHTML =
+        "El écureuil encontró la chocofresa... pero en realidad te estaba buscando a ti 💕";
+
+    document.getElementById("question").style.display = "block";
+}
+
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+
+let noCounter = 0;
+
+noBtn.addEventListener("mouseover", moveNoButton);
+
+noBtn.addEventListener("click", () => {
+
+    noCounter++;
+
+    moveNoButton();
+
+    yesBtn.style.transform =
+        `scale(${1 + noCounter * 0.25})`;
+
+    const messages = [
+        "hmm that seems incorrect",
+        "the écureuil disagrees 🐿️",
+        "nice try",
+        "you clicked wrong",
+        "System override activated 💘"
+    ];
+
+    document.getElementById("message").innerHTML =
+        "Marlene Victoria,<br><br>Will you be my Valentine? ❤️<br><br>" +
+        messages[Math.min(noCounter-1, messages.length-1)];
+});
+
+function moveNoButton() {
+
+    noBtn.style.top =
+        Math.random() * (window.innerHeight - 100) + "px";
+
+    noBtn.style.left =
+        Math.random() * (window.innerWidth - 100) + "px";
+}
+
+yesBtn.addEventListener("click", () => {
+
+    document.body.innerHTML = `
+        <h1>ESOOOOOOO ❤️</h1>
+        <h2>
+        Happy Valentine's Day Marlene Victoria ❤️<br><br>
+        From your favorite écureuil 🐿️🍓<br><br>
+        — Gabriel
+        </h2>
+
+        <img src="photo.jpg"
+        style="max-width:400px;
+        border-radius:20px;
+        margin-top:20px;">
+    `;
+
+    createHearts();
+});
+
+function createHearts() {
+
+    setInterval(() => {
+
+        const heart = document.createElement("div");
+
+        heart.className = "heart";
+
+        heart.innerHTML = "❤️";
+
+        heart.style.left =
+            Math.random() * window.innerWidth + "px";
+
+        heart.style.top =
+            window.innerHeight + "px";
+
+        heart.style.fontSize =
+            (20 + Math.random() * 30) + "px";
+
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 4000);
+
+    }, 300);
+}
+
+</script>
+
+</body>
+</html>
