@@ -255,26 +255,63 @@ function moveNoButton() {
 
 yesBtn.addEventListener("click", () => {
 
-    //pink background
-    document.body.style.background = "linear-gradient(to bottom, #ffd6ec, #ff9ecf)";
+// play audio FIRST before body replacement
+const audio = document.getElementById("amorEterno");
+audio.currentTime = 0;
+audio.play();
 
-    document.body.innerHTML = `
-        <h1>ESOOOOOOO ❤️</h1>
-        <h2>
-        Happy Valentine's Day Marlene Victoria ❤️<br><br>
-        From your favorite écureuil 🍓🐿️<br><br>
-        — Gabriel
-        </h2>
+// now replace body with pink gradient included
+document.body.innerHTML = `
+    <style>
+        body {
+            margin: 0;
+            background: linear-gradient(to bottom, #ffd6ec, #ff9ecf);
+            color: white;
+            font-family: Arial;
+            text-align: center;
+            overflow: hidden;
+        }
 
-        <img src="photo.jpg"
-        style="max-width:400px;
-        border-radius:20px;
-        margin-top:20px;">
-    `;
+        .heart {
+            position: absolute;
+            color: white;
+            animation: floatUp 4s linear infinite;
+        }
 
-    document.getElementById("amorEterno").play();
+        @keyframes floatUp {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-800px);
+                opacity: 0;
+            }
+        }
+    </style>
 
-    createHearts();
+    <h1 style="font-size:48px;">ESOOOOOOO ❤️</h1>
+
+    <h2 style="font-size:28px;">
+    Happy Valentine's Day Marlene Victoria ❤️<br><br>
+    From your favorite écureuil 🍓🐿️<br><br>
+    — Gabriel
+    </h2>
+
+    <img src="photo.jpg"
+    style="
+    max-width:500px;
+    border-radius:20px;
+    margin-top:20px;
+    box-shadow:0 0 30px rgba(255,255,255,0.5);
+    ">
+
+    <audio autoplay>
+        <source src="amor-eterno.mp3" type="audio/mpeg">
+    </audio>
+`;
+
+createHearts();
 });
 
 function createHearts() {
