@@ -301,10 +301,13 @@ yesBtn.addEventListener("click", () => {
         box-shadow:0 0 30px rgba(255,255,255,0.5);
         ">
 
-        <audio autoplay>
-            <source src="amor-eterno.mp3" type="audio/mpeg">
-        </audio>
+        
     `;
+
+    // create audio object and play immediately
+    const audio = new Audio("amor-eterno.mp3");
+    audio.volume = 1.0;
+    audio.play();
 
     createHearts();
 });
